@@ -11,6 +11,70 @@ export default class Game extends Component {
     player1: 'Player 1',
     player2: 'Player 2',
     moveCounter: 0,
+    winner: '',
+  };
+
+  winningMovesMap = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+  ];
+
+  disableAllCells = () => {
+    this.setState({
+      disabledCells: Array(9).fill(true)
+    });
+  }
+
+  checkWinner = () => {
+    if (this.state.moveCounter > 4 && this.state.winner === '') {
+      const p1Vals = this.state.cells.reduce((prevArr, cell, index) => {
+        if (cell === 'P1') prevArr.push(index);
+        return prevArr;
+      }, []);
+
+      const p2Vals = this.state.cells.reduce((prevArr, cell, index) => {
+        if (cell === 'P2') prevArr.push(index);
+        return prevArr;
+      }, []);
+
+      const p1Win = this.winningMovesMap.reduce((result, arr) => {
+        if (RegExp(arr.join(',')).test(p1Vals.join(','))) {
+          result = true;
+        }
+        return result;
+      }, false);
+      if (p1Win) {
+        this.setState({
+          winner: 'P1',
+        });
+        this.disableAllCells();
+        return 'P1';
+      }
+      const p2Win = this.winningMovesMap.reduce((result, arr) => {
+        if (RegExp(arr.join(',')).test(p2Vals.join(','))) {
+          result = true;
+        }
+        return result;
+      }, false);
+      if (p2Win) {
+        this.setState({
+          winner: 'P2',
+        });
+        this.disableAllCells();
+        return 'P2';
+      } else if (this.state.moveCounter === 9) {
+        this.setState({
+          winner: 'Tie',
+        });
+        return 'Tie';
+      } else return 'In progress';
+    }
   };
 
   cellClickHandler = i => {
@@ -39,16 +103,24 @@ export default class Game extends Component {
     );
   };
 
+  componentDidUpdate() {
+    this.checkWinner();
+  }
+
   render() {
     return (
       <View style={styles.container}>
         <Text>
-          Next Move:
-          {this.state.moveCounter === 9
-            ? 'Game ended'
+          {this.state.moveCounter === 9 || this.state.winner !== ''
+            ? 'GAME OVER!'
             : this.state.nextMoveIsP1
-            ? this.state.player1
-            : this.state.player2}
+            ? 'Next Move: ' + this.state.player1
+            : 'Next Move: ' + this.state.player2}
+        </Text>
+        <Text>
+          {this.state.winner !== '' && this.state.winner !== 'Tie'
+            ? this.state.winner + ' Won'
+            : "Its a tie!"}
         </Text>
         <View style={styles.gameContainer}>
           <View style={styles.gameRow}>
