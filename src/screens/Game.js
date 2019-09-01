@@ -10,6 +10,7 @@ export default class Game extends Component {
     nextMoveIsP1: true,
     player1: 'Player 1',
     player2: 'Player 2',
+    moveCounter: 0,
   };
 
   cellClickHandler = i => {
@@ -17,11 +18,14 @@ export default class Game extends Component {
     const disabledCells = this.state.disabledCells.slice();
     cells[i] = this.state.nextMoveIsP1 ? 'P1' : 'P2';
     disabledCells[i] = true;
-    const nextMove = this.state.nextMoveIsP1 ? false : true;
-    this.setState({
-      cells: cells,
-      nextMoveIsP1: nextMove,
-      disabledCells: disabledCells,
+
+    this.setState((prevState, state) => {
+      return {
+        cells: cells,
+        nextMoveIsP1: !prevState.nextMoveIsP1,
+        disabledCells: disabledCells,
+        moveCounter: prevState.moveCounter + 1,
+      };
     });
   };
 
@@ -39,8 +43,12 @@ export default class Game extends Component {
     return (
       <View style={styles.container}>
         <Text>
-          Next Move:{' '}
-          {this.state.nextMoveIsP1 ? this.state.player1 : this.state.player2}
+          Next Move:
+          {this.state.moveCounter === 9
+            ? 'Game ended'
+            : this.state.nextMoveIsP1
+            ? this.state.player1
+            : this.state.player2}
         </Text>
         <View style={styles.gameContainer}>
           <View style={styles.gameRow}>
