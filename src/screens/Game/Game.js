@@ -1,7 +1,17 @@
 import React, {Component} from 'react';
-import {View, StyleSheet, Text, Dimensions} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Text,
+  Dimensions,
+} from 'react-native';
+import {
+  CoordinatorLayout,
+  BottomSheetBehavior,
+} from 'react-native-bottom-sheet-behavior';
 import Cell from '../../components/Cell';
 import {checkWinner} from '../../components/GameLogic';
+
 
 const WIDTH = Dimensions.get('window').width;
 export default class Game extends Component {
@@ -88,40 +98,55 @@ export default class Game extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <Text>
-          {this.state.moveCounter === 9 || this.state.winner !== ''
-            ? 'GAME OVER!'
-            : this.state.nextMoveIsP1
-            ? 'Next Move: ' + this.state.player1
-            : 'Next Move: ' + this.state.player2}
-        </Text>
-        <Text>
-          {this.state.winner !== '' && this.state.winner !== 'Tie'
-            ? this.state.winner + ' Won'
-            : this.state.winner === 'Tie'
-            ? 'Its a tie!'
-            : null}
-        </Text>
-        <View style={styles.gameContainer}>
-          <View style={styles.gameRow}>
-            {this.renderCell(0)}
-            {this.renderCell(1)}
-            {this.renderCell(2)}
-          </View>
-          <View style={styles.gameRow}>
-            {this.renderCell(3)}
-            {this.renderCell(4)}
-            {this.renderCell(5)}
-          </View>
-          <View style={styles.gameRow}>
-            {this.renderCell(6)}
-            {this.renderCell(7)}
-            {this.renderCell(8)}
+      <CoordinatorLayout style={{flex: 1}}>
+        <View style={styles.container}>
+          <Text>
+            {this.state.moveCounter === 9 || this.state.winner !== ''
+              ? 'GAME OVER!'
+              : this.state.nextMoveIsP1
+              ? 'Next Move: ' + this.state.player1
+              : 'Next Move: ' + this.state.player2}
+          </Text>
+          <Text>
+            {this.state.winner !== '' && this.state.winner !== 'Tie'
+              ? this.state.winner + ' Won'
+              : this.state.winner === 'Tie'
+              ? 'Its a tie!'
+              : null}
+          </Text>
+          <View style={styles.gameContainer}>
+            <View style={styles.gameRow}>
+              {this.renderCell(0)}
+              {this.renderCell(1)}
+              {this.renderCell(2)}
+            </View>
+            <View style={styles.gameRow}>
+              {this.renderCell(3)}
+              {this.renderCell(4)}
+              {this.renderCell(5)}
+            </View>
+            <View style={styles.gameRow}>
+              {this.renderCell(6)}
+              {this.renderCell(7)}
+              {this.renderCell(8)}
+            </View>
           </View>
         </View>
-      </View>
+        <BottomSheetBehavior
+          ref="bottomSheet"
+          peekHeight={70}
+          hideable={false}
+          state={BottomSheetBehavior.STATE_COLLAPSED}>
+          <View style={{backgroundColor: '#4389f2'}}>
+            <View style={{padding: 26}}>
+              <Text>BottomSheetBehavior!</Text>
+            </View>
+            <View style={{height: 200, backgroundColor: '#fff'}} />
+          </View>
+        </BottomSheetBehavior>
+      </CoordinatorLayout>
     );
+
   }
 }
 
@@ -130,6 +155,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'transparent'
   },
   gameContainer: {
     flexDirection: 'column',
