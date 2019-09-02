@@ -8,7 +8,7 @@
 
 import React from 'react';
 import {View} from 'react-native';
-import DrawerNavigator from './navigation/DrawerNavigator';
+import DrawerNavigator from './src/navigation/DrawerNavigator';
 
 const App = () => {
   return (
