@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {View, StyleSheet, Text, Dimensions} from 'react-native';
 import Cell from '../components/Cell';
+import {checkWinner} from '../components/GameLogic';
 
 const WIDTH = Dimensions.get('window').width;
 export default class Game extends Component {
@@ -14,55 +15,33 @@ export default class Game extends Component {
     winner: '',
   };
 
-  winningMovesMap = [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-    [0, 4, 8],
-    [2, 4, 6],
-  ];
-
   disableAllCells = () => {
     this.setState({
-      disabledCells: Array(9).fill(true)
+      disabledCells: Array(9).fill(true),
     });
-  }
+  };
 
   checkWinner = () => {
     if (this.state.moveCounter > 4 && this.state.winner === '') {
-      const p1Vals = this.state.cells.reduce((prevArr, cell, index) => {
+      const cells = this.state.cells.slice();
+      const p1Vals = cells.reduce((prevArr, cell, index) => {
         if (cell === 'P1') prevArr.push(index);
         return prevArr;
       }, []);
 
-      const p2Vals = this.state.cells.reduce((prevArr, cell, index) => {
+      const p2Vals = cells.reduce((prevArr, cell, index) => {
         if (cell === 'P2') prevArr.push(index);
         return prevArr;
       }, []);
 
-      const p1Win = this.winningMovesMap.reduce((result, arr) => {
-        if (RegExp(arr.join(',')).test(p1Vals.join(','))) {
-          result = true;
-        }
-        return result;
-      }, false);
-      if (p1Win) {
+      if (checkWinner(p1Vals)) {
         this.setState({
           winner: 'P1',
         });
         this.disableAllCells();
         return 'P1';
       }
-      const p2Win = this.winningMovesMap.reduce((result, arr) => {
-        if (RegExp(arr.join(',')).test(p2Vals.join(','))) {
-          result = true;
-        }
-        return result;
-      }, false);
-      if (p2Win) {
+      if (checkWinner(p2Vals)) {
         this.setState({
           winner: 'P2',
         });
@@ -120,7 +99,7 @@ export default class Game extends Component {
         <Text>
           {this.state.winner !== '' && this.state.winner !== 'Tie'
             ? this.state.winner + ' Won'
-            : "Its a tie!"}
+            : 'Its a tie!'}
         </Text>
         <View style={styles.gameContainer}>
           <View style={styles.gameRow}>
