@@ -1,5 +1,5 @@
 {
-  "name": "TicTacToeV",
+  "name": "tictactoev",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -11,7 +11,6 @@
     "@react-navigation/core": "^3.5.0",
     "react": "16.8.6",
     "react-native": "0.60.5",
-    "react-native-bottom-drawer": "^1.0.2",
     "react-native-gesture-handler": "^1.4.1",
     "react-native-reanimated": "^1.2.0",
     "react-native-vector-icons": "^6.6.0",
