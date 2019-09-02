@@ -2,8 +2,9 @@ import React from 'react';
 import {Dimensions} from 'react-native';
 import {createAppContainer} from 'react-navigation';
 import {createDrawerNavigator} from 'react-navigation-drawer';
-import Game from '../src/screens/Game';
-import About from '../src/screens/About';
+import Game from '../screens/Game';
+import About from '../screens/About';
+
 
 const WIDTH = Dimensions.get('window').width;
 
