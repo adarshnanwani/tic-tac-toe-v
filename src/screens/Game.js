@@ -99,7 +99,9 @@ export default class Game extends Component {
         <Text>
           {this.state.winner !== '' && this.state.winner !== 'Tie'
             ? this.state.winner + ' Won'
-            : 'Its a tie!'}
+            : this.state.winner === 'Tie'
+            ? 'Its a tie!'
+            : null}
         </Text>
         <View style={styles.gameContainer}>
           <View style={styles.gameRow}>
