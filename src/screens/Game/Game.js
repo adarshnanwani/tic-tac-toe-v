@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {View, StyleSheet, Text, Dimensions} from 'react-native';
-import Cell from '../components/Cell';
-import {checkWinner} from '../components/GameLogic';
+import Cell from '../../components/Cell';
+import {checkWinner} from '../../components/GameLogic';
 
 const WIDTH = Dimensions.get('window').width;
 export default class Game extends Component {
