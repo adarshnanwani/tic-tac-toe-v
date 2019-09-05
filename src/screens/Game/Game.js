@@ -4,6 +4,9 @@ import {
   StyleSheet,
   Text,
   Dimensions,
+  Image,
+  ScrollView,
+  TouchableOpacity
 } from 'react-native';
 import {
   CoordinatorLayout,
@@ -11,7 +14,7 @@ import {
 } from 'react-native-bottom-sheet-behavior';
 import Cell from '../../components/Cell';
 import {checkWinner} from '../../components/GameLogic';
-
+import {GameData} from '../../components/GameData';
 
 const WIDTH = Dimensions.get('window').width;
 export default class Game extends Component {
@@ -96,6 +99,33 @@ export default class Game extends Component {
     this.checkWinner();
   }
 
+  playerSelectHandler = playerRow => {
+    this.setState({
+      player1: playerRow.player1,
+      player2: playerRow.player2
+    });
+  };
+
+  generatePlayerRows = () => {
+    return GameData.map(playerRow => {
+      return (
+        <TouchableOpacity onPress={() => this.playerSelectHandler(playerRow)}>
+          <View style={styles.imageRow}>
+            <View style={styles.playerImageView}>
+              <Image source={playerRow.player1Img} style={styles.image} />
+              <Text>{playerRow.player1}</Text>
+            </View>
+            <Text> V </Text>
+            <View style={styles.playerImageView}>
+              <Image source={playerRow.player2Img} style={styles.image} />
+              <Text>{playerRow.player2}</Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+      );
+    });
+  };
+
   render() {
     return (
       <CoordinatorLayout style={{flex: 1}}>
@@ -138,15 +168,19 @@ export default class Game extends Component {
           hideable={false}
           state={BottomSheetBehavior.STATE_COLLAPSED}>
           <View style={{backgroundColor: '#4389f2'}}>
-            <View style={{padding: 26}}>
-              <Text>BottomSheetBehavior!</Text>
+            <View style={{padding: 26, alignItems: 'center'}}>
+              <Text>Swipe up and tap to pick your players!</Text>
             </View>
-            <View style={{height: 200, backgroundColor: '#fff'}} />
+            <ScrollView
+              style={{
+                backgroundColor: '#fff',
+              }}>
+              {this.generatePlayerRows()}
+            </ScrollView>
           </View>
         </BottomSheetBehavior>
       </CoordinatorLayout>
     );
-
   }
 }
 
@@ -155,7 +189,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'transparent'
+    backgroundColor: 'transparent',
   },
   gameContainer: {
     flexDirection: 'column',
@@ -164,5 +198,23 @@ const styles = StyleSheet.create({
   },
   gameRow: {
     flexDirection: 'row',
+  },
+  imageRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    borderColor: '#ccc',
+    borderWidth: 5,
+    height: 80,
+  },
+  playerImageView: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  image: {
+    height: 50,
+    width: 50,
   },
 });
