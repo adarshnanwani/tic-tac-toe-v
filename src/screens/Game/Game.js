@@ -6,7 +6,7 @@ import {
   Dimensions,
   Image,
   ScrollView,
-  TouchableOpacity
+  TouchableOpacity,
 } from 'react-native';
 import {
   CoordinatorLayout,
@@ -21,12 +21,12 @@ export default class Game extends Component {
   state = {
     cells: Array(9).fill(null),
     disabledCells: Array(9).fill(false),
-    nextMoveIsP1: true,
-    player1: 'Player 1',
-    player2: 'Player 2',
+    nextMoveIsP1: '',
+    player1: '',
+    player2: '',
     moveCounter: 0,
     winner: '',
-    selectedPlayersData: {}
+    selectedPlayersData: {},
   };
 
   disableAllCells = () => {
@@ -39,21 +39,21 @@ export default class Game extends Component {
     if (this.state.moveCounter > 4 && this.state.winner === '') {
       const cells = this.state.cells.slice();
       const p1Vals = cells.reduce((prevArr, cell, index) => {
-        if (cell === this.state.player1) prevArr.push(index);
+        if (cell === this.state.player1.name) prevArr.push(index);
         return prevArr;
       }, []);
 
       const p2Vals = cells.reduce((prevArr, cell, index) => {
-        if (cell === this.state.player2) prevArr.push(index);
+        if (cell === this.state.player2.name) prevArr.push(index);
         return prevArr;
       }, []);
 
       if (checkWinner(p1Vals)) {
         this.setState({
-          winner: this.state.player1,
+          winner: this.state.player1.name,
         });
         this.disableAllCells();
-        return this.state.player1;
+        return this.state.player1.name;
       }
       if (checkWinner(p2Vals)) {
         this.setState({
@@ -71,21 +71,23 @@ export default class Game extends Component {
   };
 
   cellClickHandler = i => {
-    const cells = this.state.cells.slice();
-    const disabledCells = this.state.disabledCells.slice();
-    cells[i] = this.state.nextMoveIsP1
-      ? this.state.player1
-      : this.state.player2;
-    disabledCells[i] = true;
+    if (this.state.player1 !== '') {
+      const cells = this.state.cells.slice();
+      const disabledCells = this.state.disabledCells.slice();
+      cells[i] = this.state.nextMoveIsP1
+        ? this.state.player1.name
+        : this.state.player2.name;
+      disabledCells[i] = true;
 
-    this.setState((prevState, state) => {
-      return {
-        cells: cells,
-        nextMoveIsP1: !prevState.nextMoveIsP1,
-        disabledCells: disabledCells,
-        moveCounter: prevState.moveCounter + 1,
-      };
-    });
+      this.setState((prevState, state) => {
+        return {
+          cells: cells,
+          nextMoveIsP1: !prevState.nextMoveIsP1,
+          disabledCells: disabledCells,
+          moveCounter: prevState.moveCounter + 1,
+        };
+      });
+    }
   };
 
   renderCell = val => {
@@ -106,7 +108,8 @@ export default class Game extends Component {
     this.setState({
       player1: playerRow.player1,
       player2: playerRow.player2,
-      selectedPlayersData: playerRow
+      selectedPlayersData: playerRow,
+      nextMoveIsP1: true,
     });
   };
 
@@ -116,13 +119,13 @@ export default class Game extends Component {
         <TouchableOpacity onPress={() => this.playerSelectHandler(playerRow)}>
           <View style={styles.imageRow}>
             <View style={styles.playerImageView}>
-              <Image source={playerRow.player1Img} style={styles.image} />
-              <Text>{playerRow.player1}</Text>
+              <Image source={playerRow.player1.image} style={styles.image} />
+              <Text>{playerRow.player1.name}</Text>
             </View>
             <Text> V </Text>
             <View style={styles.playerImageView}>
-              <Image source={playerRow.player2Img} style={styles.image} />
-              <Text>{playerRow.player2}</Text>
+              <Image source={playerRow.player2.image} style={styles.image} />
+              <Text>{playerRow.player2.name}</Text>
             </View>
           </View>
         </TouchableOpacity>
@@ -137,9 +140,11 @@ export default class Game extends Component {
           <Text>
             {this.state.moveCounter === 9 || this.state.winner !== ''
               ? 'GAME OVER!'
-              : this.state.nextMoveIsP1
-              ? 'Next Move: ' + this.state.player1
-              : 'Next Move: ' + this.state.player2}
+              : this.state.nextMoveIsP1 === ''
+              ? 'Select your players!'
+              : this.state.nextMoveIsP1 === true
+              ? 'Next Move: ' + this.state.player1.name
+              : 'Next Move: ' + this.state.player2.name}
           </Text>
           <Text>
             {this.state.winner !== '' && this.state.winner !== 'Tie'
