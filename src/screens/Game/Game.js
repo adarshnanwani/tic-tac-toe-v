@@ -12,12 +12,18 @@ import {
   CoordinatorLayout,
   BottomSheetBehavior,
 } from 'react-native-bottom-sheet-behavior';
+import {
+  Player,
+  Recorder,
+  MediaStates
+} from '@react-native-community/audio-toolkit';
 import Cell from '../../components/Cell';
 import {checkWinner} from '../../components/GameLogic';
 import {GameData} from '../../components/GameData';
 
 const WIDTH = Dimensions.get('window').width;
 export default class Game extends Component {
+  player =  Player;
   state = {
     cells: Array(9).fill(null),
     disabledCells: Array(9).fill(false),
@@ -88,6 +94,9 @@ export default class Game extends Component {
         };
       });
     }
+    else {
+    new Player('cell_disabled.mp3').play();
+    }
   };
 
   renderCell = val => {
@@ -116,7 +125,7 @@ export default class Game extends Component {
   generatePlayerRows = () => {
     return GameData.map(playerRow => {
       return (
-        <TouchableOpacity onPress={() => this.playerSelectHandler(playerRow)}>
+        <TouchableOpacity onPress={() => this.playerSelectHandler(playerRow)} key={playerRow.player1.name}>
           <View style={styles.imageRow}>
             <View style={styles.playerImageView}>
               <Image source={playerRow.player1.image} style={styles.image} />
