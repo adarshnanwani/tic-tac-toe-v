@@ -39,12 +39,12 @@ export default class Game extends Component {
     if (this.state.moveCounter > 4 && this.state.winner === '') {
       const cells = this.state.cells.slice();
       const p1Vals = cells.reduce((prevArr, cell, index) => {
-        if (cell === this.state.player1.name) prevArr.push(index);
+        if (cell === this.state.player1) prevArr.push(index);
         return prevArr;
       }, []);
 
       const p2Vals = cells.reduce((prevArr, cell, index) => {
-        if (cell === this.state.player2.name) prevArr.push(index);
+        if (cell === this.state.player2) prevArr.push(index);
         return prevArr;
       }, []);
 
@@ -57,7 +57,7 @@ export default class Game extends Component {
       }
       if (checkWinner(p2Vals)) {
         this.setState({
-          winner: this.state.player2,
+          winner: this.state.player2.name,
         });
         this.disableAllCells();
         return this.state.player2;
@@ -75,8 +75,8 @@ export default class Game extends Component {
       const cells = this.state.cells.slice();
       const disabledCells = this.state.disabledCells.slice();
       cells[i] = this.state.nextMoveIsP1
-        ? this.state.player1.name
-        : this.state.player2.name;
+        ? this.state.player1
+        : this.state.player2;
       disabledCells[i] = true;
 
       this.setState((prevState, state) => {
@@ -93,7 +93,7 @@ export default class Game extends Component {
   renderCell = val => {
     return (
       <Cell
-        value={this.state.cells[val]}
+        playerData={this.state.cells[val]}
         onPress={() => this.cellClickHandler(val)}
         disabled={this.state.disabledCells[val]}
       />
