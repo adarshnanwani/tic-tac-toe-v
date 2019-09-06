@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, Image} from 'react-native';
 
 const cell = props => {
   return (
@@ -7,7 +7,7 @@ const cell = props => {
       style={styles.container}
       onPress={props.onPress}
       disabled={props.disabled}>
-      <Text>{props.value}</Text>
+      {props.playerData ? <Image source={props.playerData.image} style={styles.cellImage}/> : null}
     </TouchableOpacity>
   );
 };
@@ -22,6 +22,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderColor: '#ccc',
     borderWidth: 4,
+    margin:1
+  },
+  cellImage: {
+    height: 80,
+    width: 80,
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 
